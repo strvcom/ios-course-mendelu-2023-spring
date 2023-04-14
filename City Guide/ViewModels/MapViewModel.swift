@@ -107,6 +107,27 @@ class MapItemsViewModel: ObservableObject {
             save()
         }
     }
-    
 }
 
+// MARK: - Networking seminar
+
+/*
+ 
+ FLOW:
+ a) show added button in app, mock static data for MapItem
+ b) write down direct url request with async await (constants)
+ c) improve with api manager (protocol + implementation), explain reasons we have it
+ d) wrap in Task
+ 
+ BONUS:
+ a) describe multiple model objects (DTO, BDO) and conversion between them
+ b) Endpoint protocol - scalability structure, build URLRequest from request parameters(headers, body etc)
+ */
+
+extension MapItemsViewModel {
+    func addIPMapItem() {
+        let mockMapItem = MapItem.mock
+        // can be added multiple times, it's sample
+        mapItems.append(mockMapItem)
+    }
+}

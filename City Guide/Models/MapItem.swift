@@ -59,3 +59,15 @@ struct MapItem: Identifiable {
     }
 }
 
+// MARK: - Mocks
+extension MapItem {
+    // Dummy item shows point "Za luzankami" stadium
+    static let mock = MapItem(
+        id: UUID(),
+        name: "IP",
+        style: .None,
+        image: UIImage(named: "empty") ?? UIImage(),
+        coordinates: CLLocationCoordinate2D(latitude: 49.2125, longitude: 16.6124),
+        locationType: .None
+    )
+}

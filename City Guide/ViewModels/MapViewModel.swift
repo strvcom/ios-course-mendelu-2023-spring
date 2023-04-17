@@ -10,6 +10,7 @@ import SwiftUI
 import CoreData
 import CoreLocation
 
+@MainActor
 class MapItemsViewModel: ObservableObject {
     @Published var mapItems: [MapItem] = []
     @Published var selectedMapItem: MapItem?
@@ -125,9 +126,38 @@ class MapItemsViewModel: ObservableObject {
  */
 
 extension MapItemsViewModel {
-    func addIPMapItem() {
-        let mockMapItem = MapItem.mock
-        // can be added multiple times, it's sample
-        mapItems.append(mockMapItem)
+    func addIPMapItem() async throws {
+        let urlSession = URLSession.shared
+        let decoder = JSONDecoder()
+        
+        var ipAddressURL = URL(string: "https://api.ipify.org")!
+        ipAddressURL = ipAddressURL.appending(
+            queryItems: [
+                URLQueryItem(
+                    name: "format",
+                    value: "json"
+                )
+            ]
+        )
+        
+        let ipAddressRequest = URLRequest(url: ipAddressURL)
+        
+        let (ipAddressRequestData, ipAddressRequestResponse) = try await urlSession.data(for: ipAddressRequest)
+        
+        let ipAddress = try decoder.decode(IPDTO.self, from: ipAddressRequestData)
+        
+        var ipInfoURL = URL(string: "https://ipinfo.io")!
+        ipInfoURL = ipInfoURL.appendingPathComponent(ipAddress.ip)
+        ipInfoURL = ipInfoURL.appendingPathComponent("geo")
+        
+        let ipInfoRequest = URLRequest(url: ipInfoURL)
+        
+        let (ipInfoData, ipInfoResponse) = try await urlSession.data(for: ipInfoRequest)
+        
+        let ipInfo = try decoder.decode(IPInfoDTO.self, from: ipInfoData)
+        
+        let mapItem = try MapItem(ipInfo: ipInfo)
+        
+        mapItems.append(mapItem)
     }
 }

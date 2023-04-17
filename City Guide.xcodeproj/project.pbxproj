@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		23CB1DBB29E9939B001DBAC1 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23CB1DBA29E9939B001DBAC1 /* Constants.swift */; };
+		598A606F29ED635B002273E7 /* IPDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598A606E29ED635B002273E7 /* IPDTO.swift */; };
+		598A607129ED6383002273E7 /* IPInfoDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598A607029ED6383002273E7 /* IPInfoDTO.swift */; };
 		8720F53C29D414C700E33C54 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8720F53B29D414C700E33C54 /* LocationManager.swift */; };
 		8720F54329D42E8E00E33C54 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8720F54229D42E8E00E33C54 /* Buttons.swift */; };
 		873F5E1529DDBB8900E7C455 /* NewMapItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873F5E1429DDBB8900E7C455 /* NewMapItemView.swift */; };
@@ -26,7 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		23CB1DBA29E9939B001DBAC1 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		598A606E29ED635B002273E7 /* IPDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPDTO.swift; sourceTree = "<group>"; };
+		598A607029ED6383002273E7 /* IPInfoDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPInfoDTO.swift; sourceTree = "<group>"; };
 		8720F53B29D414C700E33C54 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		8720F54129D42A5600E33C54 /* brno.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = brno.gpx; path = "City Guide/brno.gpx"; sourceTree = "<group>"; };
 		8720F54229D42E8E00E33C54 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
@@ -118,9 +120,10 @@
 			isa = PBXGroup;
 			children = (
 				87479E2029D58A770063ACDB /* CityGuide.xcdatamodeld */,
-				23CB1DBA29E9939B001DBAC1 /* Constants.swift */,
 				87479E2829D5A3990063ACDB /* MapItem.swift */,
 				87479E2329D58BA70063ACDB /* CoreDataController.swift */,
+				598A606E29ED635B002273E7 /* IPDTO.swift */,
+				598A607029ED6383002273E7 /* IPInfoDTO.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -213,12 +216,13 @@
 				873F5E1529DDBB8900E7C455 /* NewMapItemView.swift in Sources */,
 				BD98754229CB0A3D002A9F10 /* City_GuideApp.swift in Sources */,
 				8720F54329D42E8E00E33C54 /* Buttons.swift in Sources */,
+				598A607129ED6383002273E7 /* IPInfoDTO.swift in Sources */,
+				598A606F29ED635B002273E7 /* IPDTO.swift in Sources */,
 				87479E2229D58A770063ACDB /* CityGuide.xcdatamodeld in Sources */,
 				87479E2429D58BA70063ACDB /* CoreDataController.swift in Sources */,
 				8720F53C29D414C700E33C54 /* LocationManager.swift in Sources */,
 				BD98755629CB11A6002A9F10 /* MapView.swift in Sources */,
 				87479E2C29D5A3990063ACDB /* MapItem.swift in Sources */,
-				23CB1DBB29E9939B001DBAC1 /* Constants.swift in Sources */,
 				879C6BE629D4763800E12E5F /* ErrorView.swift in Sources */,
 				87479E2729D59F220063ACDB /* MapViewModel.swift in Sources */,
 			);

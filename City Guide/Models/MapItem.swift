@@ -59,15 +59,32 @@ struct MapItem: Identifiable {
     }
 }
 
-// MARK: - Mocks
 extension MapItem {
-    // Dummy item shows point "Za luzankami" stadium
-    static let mock = MapItem(
-        id: UUID(),
-        name: "IP",
-        style: .None,
-        image: UIImage(named: "empty") ?? UIImage(),
-        coordinates: CLLocationCoordinate2D(latitude: 49.2125, longitude: 16.6124),
-        locationType: .None
-    )
+    init(ipInfo: IPInfoDTO) throws {
+        self.id = UUID()
+        self.name = "IP"
+        self.style = .None
+        self.image = UIImage()
+        
+        let locSeparated = ipInfo.loc.split(separator: ",")
+        
+        guard
+            let latitude = Double(String(locSeparated.first ?? "")),
+            let longitude = Double(String(locSeparated.last ?? ""))
+        else {
+            throw MapItemError.locIsNotCorrect(loc: ipInfo.loc)
+        }
+
+        self.coordinates = CLLocationCoordinate2D(
+            latitude: latitude,
+            longitude: longitude
+        )
+        
+        self.locationType = .None
+        self.email = ""
+    }
+}
+
+enum MapItemError: Error {
+    case locIsNotCorrect(loc: String)
 }

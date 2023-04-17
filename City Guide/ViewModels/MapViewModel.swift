@@ -16,6 +16,7 @@ class MapItemsViewModel: ObservableObject {
     @Published var selectedMapItem: MapItem?
     
     var moc: NSManagedObjectContext
+    private let apiManager: APIManaging = APIManager()
 
     init(moc: NSManagedObjectContext){
         self.moc = moc
@@ -127,37 +128,21 @@ class MapItemsViewModel: ObservableObject {
 
 extension MapItemsViewModel {
     func addIPMapItem() async throws {
-        let urlSession = URLSession.shared
-        let decoder = JSONDecoder()
-        
-        var ipAddressURL = URL(string: "https://api.ipify.org")!
-        ipAddressURL = ipAddressURL.appending(
-            queryItems: [
-                URLQueryItem(
-                    name: "format",
-                    value: "json"
-                )
-            ]
-        )
-        
-        let ipAddressRequest = URLRequest(url: ipAddressURL)
-        
-        let (ipAddressRequestData, ipAddressRequestResponse) = try await urlSession.data(for: ipAddressRequest)
-        
-        let ipAddress = try decoder.decode(IPDTO.self, from: ipAddressRequestData)
-        
-        var ipInfoURL = URL(string: "https://ipinfo.io")!
-        ipInfoURL = ipInfoURL.appendingPathComponent(ipAddress.ip)
-        ipInfoURL = ipInfoURL.appendingPathComponent("geo")
-        
-        let ipInfoRequest = URLRequest(url: ipInfoURL)
-        
-        let (ipInfoData, ipInfoResponse) = try await urlSession.data(for: ipInfoRequest)
-        
-        let ipInfo = try decoder.decode(IPInfoDTO.self, from: ipInfoData)
-        
+        // call first request
+        let ipDTO = try await getIP()
+        // call second request with response from first request
+        let ipInfo = try await getIPInfo(ipAddress: ipDTO.ip)
+        // create MapItem
         let mapItem = try MapItem(ipInfo: ipInfo)
-        
+        // append to array
         mapItems.append(mapItem)
+    }
+    
+    private func getIP() async throws -> IPDTO {
+        try await apiManager.request(IPRouter.getIP)
+    }
+    
+    private func getIPInfo(ipAddress: String) async throws -> IPInfoDTO {
+        try await apiManager.request(IPRouter.getIPInfo(ipAddress: ipAddress))
     }
 }

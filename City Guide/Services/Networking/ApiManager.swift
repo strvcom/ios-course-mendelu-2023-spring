@@ -8,7 +8,7 @@
 import Foundation
 
 protocol APIManaging {
-    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T
+    func request<T: Decodable>(_ endpoint: Router) async throws -> T
 }
 
 final class APIManager {
@@ -18,9 +18,9 @@ final class APIManager {
     // session for downloading
     private let urlSession = URLSession.shared
     
-    private func request(_ endpoint: Endpoint) async throws -> Data {
+    private func request(_ router: Router) async throws -> Data {
         /// from `Endpoint` protocol we receive finished URLRequest
-        let request: URLRequest = try endpoint.asRequest()
+        let request: URLRequest = try router.asRequest()
         
         // print it to log
         print("🚀 Request for \"\(request.description)\"")
@@ -50,8 +50,8 @@ final class APIManager {
 // MARK: APIManaging
 
 extension APIManager: APIManaging {
-    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
-        let data = try await request(endpoint)
+    func request<T: Decodable>(_ router: Router) async throws -> T {
+        let data = try await request(router)
         let object = try decoder.decode(T.self, from: data)
 
         return object

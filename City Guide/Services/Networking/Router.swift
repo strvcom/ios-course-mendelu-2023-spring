@@ -1,5 +1,5 @@
 //
-//  Endpoint.swift
+//  Router.swift
 //  City Guide
 //
 //  Created by Martin Vidovic on 17.04.2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Endpoint {
+protocol Router {
     var baseURL: String { get }
     var path: String { get }
     var method: HTTPMethod { get }
@@ -17,7 +17,7 @@ protocol Endpoint {
     func asRequest() throws -> URLRequest
 }
 
-extension Endpoint {
+extension Router {
     func asRequest() throws -> URLRequest {
         // base url
         let baseURL =  URL(string: baseURL)!

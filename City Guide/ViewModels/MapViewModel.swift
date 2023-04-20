@@ -123,7 +123,7 @@ class MapItemsViewModel: ObservableObject {
  
  BONUS:
  a) describe multiple model objects (DTO, BDO) and conversion between them
- b) Endpoint protocol - scalability structure, build URLRequest from request parameters(headers, body etc)
+ b) Router protocol - scalability structure, build URLRequest from request parameters(headers, body etc)
  */
 
 extension MapItemsViewModel {

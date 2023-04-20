@@ -12,7 +12,7 @@ enum IPRouter {
     case getIPInfo(ipAddress: String)
 }
 
-extension IPRouter: Endpoint {
+extension IPRouter: Router {
     var baseURL: String {
         switch self {
         case .getIP:

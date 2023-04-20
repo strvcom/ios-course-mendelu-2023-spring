@@ -12,7 +12,7 @@ struct MapView: View {
     @StateObject var locManager = LocationManager()
     @State private var detailPresented: Bool = false
     @State private var newPointViewPresented: Bool = false
-    
+
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: []) var pois: FetchedResults<PointOfInterest>
     @StateObject var mapItemsViewModel: MapItemsViewModel
@@ -78,12 +78,22 @@ struct MapView: View {
             .navigationTitle("City Guide")
             .toolbar{
                 ToolbarItemGroup(placement: .navigationBarTrailing){
-                    Button("IP") {
-                        mapItemsViewModel.addIPMapItem()
-                    }
-                    
                     Button("Add Point"){
                         newPointViewPresented.toggle()
+                    }
+                    
+                    if mapItemsViewModel.isLoadingIP {
+                        ProgressView()
+                    } else {
+                        Button("IP") {
+                            Task {
+                                do {
+                                    try await mapItemsViewModel.addIPMapItem()
+                                } catch {
+                                    print("MAPVIEW error: \(error)")
+                                }
+                            }
+                        }
                     }
                 }
             }

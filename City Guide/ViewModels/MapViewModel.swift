@@ -10,11 +10,14 @@ import SwiftUI
 import CoreData
 import CoreLocation
 
+@MainActor
 class MapItemsViewModel: ObservableObject {
     @Published var mapItems: [MapItem] = []
     @Published var selectedMapItem: MapItem?
+    @Published var isLoadingIP: Bool = false
     
     var moc: NSManagedObjectContext
+    private let apiManager: ApiManaging = APIManager()
 
     init(moc: NSManagedObjectContext){
         self.moc = moc
@@ -107,27 +110,49 @@ class MapItemsViewModel: ObservableObject {
             save()
         }
     }
-}
-
-// MARK: - Networking seminar
-
-/*
- 
- FLOW:
- a) show added button in app, mock static data for MapItem
- b) write down direct url request with async await (constants)
- c) improve with api manager (protocol + implementation), explain reasons we have it
- d) wrap in Task
- 
- BONUS:
- a) describe multiple model objects (DTO, BDO) and conversion between them
- b) Endpoint protocol - scalability structure, build URLRequest from request parameters(headers, body etc)
- */
-
-extension MapItemsViewModel {
-    func addIPMapItem() {
-        let mockMapItem = MapItem.mock
-        // can be added multiple times, it's sample
-        mapItems.append(mockMapItem)
+    
+    func addIPMapItem() async throws {
+        isLoadingIP = true
+        
+        defer {
+            isLoadingIP = false
+        }
+        
+        var ipAddressURL = URL(string: "https://api.ipify.org")!
+        ipAddressURL = ipAddressURL.appending(queryItems: [URLQueryItem(name: "format", value: "json")])
+        let ipAddressRequest = URLRequest(url: ipAddressURL)
+        let ipAddress: IPAddressDTO = try await apiManager.request(ipAddressRequest)
+        
+        print("RESPONSE: \(ipAddress)")
+        
+        var ipInfoURL = URL(string: "https://ipinfo.io")!
+        ipInfoURL = ipInfoURL.appendingPathComponent(ipAddress.ip)
+        ipInfoURL = ipInfoURL.appendingPathComponent("geo")
+        let ipInfoURLRequest = URLRequest(url: ipInfoURL)
+        let ipInfo: IPInfoDTO = try await apiManager.request(ipInfoURLRequest)
+        
+        print("RESPONSE: \(ipInfo)")
+        
+        
+        let mapItem = convertInfoToMapItem(response: ipInfo)
+        mapItems.append(mapItem)
+    }
+    
+    func convertInfoToMapItem(response: IPInfoDTO) -> MapItem {
+        let coordinates = response.loc.split(separator: ",")
+        let latitude = Double(coordinates.first ?? "") ?? 0
+        let longitude = Double(coordinates.last ?? "") ?? 0
+        
+        return MapItem(
+            id: UUID(),
+            name: "IP \(response.region)",
+            style: .None,
+            image: UIImage(),
+            coordinates: CLLocationCoordinate2D(
+                latitude: latitude,
+                longitude: longitude
+            ),
+            locationType: .None
+        )
     }
 }

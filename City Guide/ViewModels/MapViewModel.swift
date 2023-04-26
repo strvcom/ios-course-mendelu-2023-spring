@@ -10,11 +10,13 @@ import SwiftUI
 import CoreData
 import CoreLocation
 
+@MainActor
 class MapItemsViewModel: ObservableObject {
     @Published var mapItems: [MapItem] = []
     @Published var selectedMapItem: MapItem?
     
     var moc: NSManagedObjectContext
+    private let apiManager: APIManaging = APIManager()
 
     init(moc: NSManagedObjectContext){
         self.moc = moc
@@ -121,13 +123,26 @@ class MapItemsViewModel: ObservableObject {
  
  BONUS:
  a) describe multiple model objects (DTO, BDO) and conversion between them
- b) Endpoint protocol - scalability structure, build URLRequest from request parameters(headers, body etc)
+ b) Router protocol - scalability structure, build URLRequest from request parameters(headers, body etc)
  */
 
 extension MapItemsViewModel {
-    func addIPMapItem() {
-        let mockMapItem = MapItem.mock
-        // can be added multiple times, it's sample
-        mapItems.append(mockMapItem)
+    func addIPMapItem() async throws {
+        // call first request
+        let ipDTO = try await getIP()
+        // call second request with response from first request
+        let ipInfo = try await getIPInfo(ipAddress: ipDTO.ip)
+        // create MapItem
+        let mapItem = try MapItem(ipInfo: ipInfo)
+        // append to array
+        mapItems.append(mapItem)
+    }
+    
+    private func getIP() async throws -> IPDTO {
+        try await apiManager.request(IPRouter.getIP)
+    }
+    
+    private func getIPInfo(ipAddress: String) async throws -> IPInfoDTO {
+        try await apiManager.request(IPRouter.getIPInfo(ipAddress: ipAddress))
     }
 }

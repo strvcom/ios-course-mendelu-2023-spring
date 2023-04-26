@@ -79,7 +79,14 @@ struct MapView: View {
             .toolbar{
                 ToolbarItemGroup(placement: .navigationBarTrailing){
                     Button("IP") {
-                        mapItemsViewModel.addIPMapItem()
+                        Task {
+                            do {
+                                try await mapItemsViewModel.addIPMapItem()
+                            } catch {
+                                print(error)
+                            }
+                        }
+                        
                     }
                     
                     Button("Add Point"){
